@@ -86,12 +86,12 @@ export default function App() {
             <Route path="settings" element={<SettingsPage />} />
           </Route>
 
-          {/* 404 */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
-
           {/* ─── Student Portal ──────────────────────── */}
           <Route path="/student" element={<StudentLoginPage />} />
           <Route path="/student/portal" element={<StudentPortalPage />} />
+
+          {/* 404 */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
 
