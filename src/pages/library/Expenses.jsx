@@ -105,21 +105,21 @@ export default function ExpensesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Expenses</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Expenses</h1>
           <p className="text-gray-500 text-sm mt-1">Track all library expenses</p>
         </div>
         <Button icon={Plus} onClick={() => setShowModal(true)}>Add Expense</Button>
       </div>
 
       {/* Summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
           <p className="text-sm text-gray-500">This Month</p>
-          <p className="text-3xl font-bold text-red-600 mt-1">₹{thisMonthTotal.toLocaleString('en-IN')}</p>
+          <p className="text-2xl font-bold text-red-600 mt-1">₹{thisMonthTotal.toLocaleString('en-IN')}</p>
         </div>
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 col-span-2">
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 sm:col-span-2">
           <p className="text-sm text-gray-500 mb-2">By Category</p>
           <div className="grid grid-cols-3 gap-2">
             {CATEGORIES.slice(0, 6).map(cat => {

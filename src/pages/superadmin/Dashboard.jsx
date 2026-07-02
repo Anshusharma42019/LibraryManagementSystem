@@ -7,14 +7,14 @@ import api from '../../api/client';
 import toast from 'react-hot-toast';
 
 const StatCard = ({ title, value, icon: Icon, color, bgColor }) => (
-  <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-    <div className="flex items-center justify-between mb-4">
-      <span className="text-sm font-medium text-gray-500">{title}</span>
-      <div className={`w-10 h-10 ${bgColor} rounded-xl flex items-center justify-center`}>
-        <Icon size={20} className={color} />
+  <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+    <div className="flex items-center justify-between mb-3">
+      <span className="text-xs font-medium text-gray-500 pr-2 leading-tight">{title}</span>
+      <div className={`w-9 h-9 ${bgColor} rounded-xl flex items-center justify-center shrink-0`}>
+        <Icon size={17} className={color} />
       </div>
     </div>
-    <div className="text-3xl font-bold text-gray-900">{value}</div>
+    <div className="text-2xl font-bold text-gray-900 truncate">{value}</div>
   </div>
 );
 
@@ -56,7 +56,7 @@ export default function SuperAdminDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Super Admin Dashboard</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Super Admin Dashboard</h1>
         <p className="text-gray-500 text-sm mt-1">Overview of all libraries on the platform</p>
       </div>
 
@@ -72,13 +72,15 @@ export default function SuperAdminDashboard() {
         <StatCard title="Revenue Growth" value="+12%" icon={TrendingUp} color="text-purple-600" bgColor="bg-purple-50" />
       </div>
 
-      {/* Recent Libraries Table */}
+      {/* Recent Libraries */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
           <h2 className="font-semibold text-gray-900">Recent Libraries</h2>
           <a href="/superadmin/libraries" className="text-sm text-indigo-600 hover:underline">View all →</a>
         </div>
-        <div className="overflow-x-auto">
+
+        {/* Desktop table */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
               <tr>
@@ -95,26 +97,38 @@ export default function SuperAdminDashboard() {
                   <td className="px-6 py-4 font-medium text-gray-900">{lib.name}</td>
                   <td className="px-6 py-4 text-gray-600">{lib.ownerName}</td>
                   <td className="px-6 py-4">
-                    <span className="text-xs font-medium bg-indigo-50 text-indigo-700 px-2 py-1 rounded-full">
-                      {lib.planName}
-                    </span>
+                    <span className="text-xs font-medium bg-indigo-50 text-indigo-700 px-2 py-1 rounded-full">{lib.planName}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`text-xs font-medium px-2 py-1 rounded-full capitalize ${statusBadge[lib.status]}`}>
-                      {lib.status}
-                    </span>
+                    <span className={`text-xs font-medium px-2 py-1 rounded-full capitalize ${statusBadge[lib.status]}`}>{lib.status}</span>
                   </td>
-                  <td className="px-6 py-4 text-gray-500 text-sm">
-                    {new Date(lib.createdAt).toLocaleDateString('en-IN')}
-                  </td>
+                  <td className="px-6 py-4 text-gray-500 text-sm">{new Date(lib.createdAt).toLocaleDateString('en-IN')}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {recentLibraries.length === 0 && (
-            <div className="text-center py-10 text-gray-400">No libraries yet.</div>
-          )}
         </div>
+
+        {/* Mobile cards */}
+        <div className="sm:hidden divide-y divide-gray-50">
+          {recentLibraries.map((lib) => (
+            <div key={lib._id} className="p-4 space-y-1.5">
+              <div className="flex items-start justify-between gap-2">
+                <p className="font-semibold text-gray-900">{lib.name}</p>
+                <span className={`text-xs font-medium px-2 py-0.5 rounded-full capitalize shrink-0 ${statusBadge[lib.status]}`}>{lib.status}</span>
+              </div>
+              <p className="text-sm text-gray-500">{lib.ownerName}</p>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full">{lib.planName}</span>
+                <span className="text-xs text-gray-400">{new Date(lib.createdAt).toLocaleDateString('en-IN')}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {recentLibraries.length === 0 && (
+          <div className="text-center py-10 text-gray-400 text-sm">No libraries yet.</div>
+        )}
       </div>
     </div>
   );

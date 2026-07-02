@@ -87,6 +87,24 @@ export default function FeesPage() {
     }
   };
 
+  const feesMobileRender = (r) => (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="font-semibold text-gray-900">{r.studentName}</p>
+          <p className="text-xs text-gray-400">Seat {r.seatNo || '—'} • {r.paymentMonth || '—'}</p>
+        </div>
+        <span className="text-base font-bold text-green-600">₹{r.amount.toLocaleString('en-IN')}</span>
+      </div>
+      <div className="flex items-center gap-2 flex-wrap">
+        <Badge text={r.paymentMode} type="default" />
+        <Badge text={r.status} type={r.status === 'paid' ? 'active' : 'pending'} />
+        <span className="text-xs text-gray-400">{new Date(r.paidAt).toLocaleDateString('en-IN')}</span>
+        <span className="text-xs font-mono text-gray-300 ml-auto">{r.receiptNo}</span>
+      </div>
+    </div>
+  );
+
   const columns = [
     {
       key: 'receipt', label: 'Receipt',
@@ -111,9 +129,9 @@ export default function FeesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Fee Collection</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Fee Collection</h1>
           <p className="text-gray-500 text-sm mt-1">Track and manage all fee payments</p>
         </div>
         <Button icon={Plus} onClick={() => setShowModal(true)}>Collect Fee</Button>
@@ -121,17 +139,17 @@ export default function FeesPage() {
 
       {/* Summary Cards */}
       {summary && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
             <p className="text-sm text-gray-500">This Month</p>
-            <p className="text-3xl font-bold text-gray-900 mt-1">₹{(summary.thisMonth?.total || 0).toLocaleString('en-IN')}</p>
+            <p className="text-2xl font-bold text-gray-900 mt-1">₹{(summary.thisMonth?.total || 0).toLocaleString('en-IN')}</p>
             <p className="text-xs text-green-600 mt-1">{summary.thisMonth?.count || 0} payments collected</p>
           </div>
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
             <p className="text-sm text-gray-500">All Time Revenue</p>
-            <p className="text-3xl font-bold text-gray-900 mt-1">₹{(summary.allTime?.total || 0).toLocaleString('en-IN')}</p>
+            <p className="text-2xl font-bold text-gray-900 mt-1">₹{(summary.allTime?.total || 0).toLocaleString('en-IN')}</p>
           </div>
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
             <p className="text-sm text-gray-500 mb-2">By Payment Mode</p>
             {(summary.byPaymentMode || []).map(m => (
               <div key={m._id} className="flex justify-between text-sm mb-1">
@@ -149,7 +167,7 @@ export default function FeesPage() {
           <EmptyState icon={IndianRupee} title="No payments yet" subtitle="Collect your first fee payment" action={<Button icon={Plus} onClick={() => setShowModal(true)}>Collect Fee</Button>} />
         ) : (
           <>
-            <Table columns={columns} data={payments} />
+            <Table columns={columns} data={payments} mobileRender={feesMobileRender} />
             {pagination.pages > 1 && (
               <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100">
                 <p className="text-sm text-gray-500">{pagination.total} payments</p>

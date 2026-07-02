@@ -249,28 +249,34 @@ export default function StudentsPage() {
     }
   };
 
+  const actionButtons = (r) => (
+    <div className="flex items-center gap-2">
+      <button onClick={() => { setSelectedStudent(r); setShowView(true); }} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg transition"><Search size={14} /></button>
+      <button onClick={() => openEdit(r)} className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"><Edit2 size={14} /></button>
+      <button onClick={() => { setPinStudent(r); setPinValue(''); setPinModal(true); }} className="p-1.5 text-yellow-600 hover:bg-yellow-50 rounded-lg transition" title="Set Student PIN"><KeyRound size={14} /></button>
+      <button onClick={() => handleDelete(r._id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition"><Trash2 size={14} /></button>
+    </div>
+  );
+
   const columns = [
     {
       key: 'name', label: 'Student',
       render: r => (
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm">
+          <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm shrink-0">
             {r.name.charAt(0).toUpperCase()}
           </div>
-          <div>
-            <p className="font-medium text-gray-900">{r.name}</p>
+          <div className="min-w-0">
+            <p className="font-medium text-gray-900 truncate">{r.name}</p>
             <p className="text-xs text-gray-400">{r.studentCode}</p>
           </div>
         </div>
       )
     },
-    { key: 'mobile', label: 'Mobile', render: r => <span className="text-gray-600">{r.mobile}</span> },
-    { key: 'studentCode', label: 'Code', render: r => (
-      <span className="font-mono text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-lg">{r.studentCode}</span>
-    ) },
-    { key: 'seatNo', label: 'Seat', render: r => r.seatNo ? <Badge text={`Seat ${r.seatNo}`} type="default" /> : <span className="text-gray-300">—</span> },
-    { key: 'shift', label: 'Shift', render: r => <span className="capitalize text-gray-600">{r.shift}</span> },
-    { key: 'monthlyFee', label: 'Fee', render: r => <span className="font-medium text-gray-900">₹{r.monthlyFee}</span> },
+    { key: 'mobile',     label: 'Mobile', render: r => <span className="text-gray-600">{r.mobile}</span> },
+    { key: 'seatNo',     label: 'Seat',   render: r => r.seatNo ? <Badge text={`Seat ${r.seatNo}`} type="default" /> : <span className="text-gray-300">—</span> },
+    { key: 'shift',      label: 'Shift',  render: r => <span className="capitalize text-gray-600">{r.shift}</span> },
+    { key: 'monthlyFee', label: 'Fee',    render: r => <span className="font-medium text-gray-900">₹{r.monthlyFee}</span> },
     {
       key: 'expiryDate', label: 'Expiry',
       render: r => {
@@ -278,25 +284,52 @@ export default function StudentsPage() {
         return <span className={`text-sm ${expired ? 'text-red-500 font-medium' : 'text-gray-500'}`}>{r.expiryDate ? new Date(r.expiryDate).toLocaleDateString('en-IN') : '—'}</span>;
       }
     },
-    { key: 'status', label: 'Status', render: r => <Badge text={r.status} type={r.status === 'active' ? 'active' : 'expired'} /> },
-    {
-      key: 'actions', label: 'Actions',
-      render: r => (
-        <div className="flex items-center gap-2">
-          <button onClick={() => { setSelectedStudent(r); setShowView(true); }} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg transition"><Search size={14} /></button>
-          <button onClick={() => openEdit(r)} className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"><Edit2 size={14} /></button>
-          <button onClick={() => { setPinStudent(r); setPinValue(''); setPinModal(true); }} className="p-1.5 text-yellow-600 hover:bg-yellow-50 rounded-lg transition" title="Set Student PIN"><KeyRound size={14} /></button>
-          <button onClick={() => handleDelete(r._id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition"><Trash2 size={14} /></button>
-        </div>
-      )
-    },
+    { key: 'status',  label: 'Status',  render: r => <Badge text={r.status} type={r.status === 'active' ? 'active' : 'expired'} /> },
+    { key: 'actions', label: 'Actions', render: actionButtons },
   ];
+
+  const mobileRender = (r) => {
+    const expired = new Date(r.expiryDate) < new Date();
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold shrink-0">
+              {r.name.charAt(0).toUpperCase()}
+            </div>
+            <div className="min-w-0">
+              <p className="font-semibold text-gray-900 truncate">{r.name}</p>
+              <p className="text-xs text-gray-400">{r.studentCode} • {r.mobile}</p>
+            </div>
+          </div>
+          <Badge text={r.status} type={r.status === 'active' ? 'active' : 'expired'} />
+        </div>
+        <div className="grid grid-cols-3 gap-2 text-xs">
+          <div className="bg-gray-50 rounded-lg p-2">
+            <p className="text-gray-400">Seat</p>
+            <p className="font-medium text-gray-700">{r.seatNo || '—'}</p>
+          </div>
+          <div className="bg-gray-50 rounded-lg p-2">
+            <p className="text-gray-400">Fee</p>
+            <p className="font-medium text-gray-700">₹{r.monthlyFee}</p>
+          </div>
+          <div className="bg-gray-50 rounded-lg p-2">
+            <p className="text-gray-400">Expiry</p>
+            <p className={`font-medium ${expired ? 'text-red-500' : 'text-gray-700'}`}>
+              {r.expiryDate ? new Date(r.expiryDate).toLocaleDateString('en-IN') : '—'}
+            </p>
+          </div>
+        </div>
+        <div className="flex justify-end">{actionButtons(r)}</div>
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Students</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Students</h1>
           <p className="text-gray-500 text-sm mt-1">Manage all enrolled students</p>
         </div>
         <Button icon={Plus} onClick={openAdd}>Add Student</Button>
@@ -333,7 +366,7 @@ export default function StudentsPage() {
           <EmptyState icon={Users} title="No students found" subtitle="Add your first student to get started" action={<Button icon={Plus} onClick={openAdd}>Add Student</Button>} />
         ) : (
           <>
-            <Table columns={columns} data={students} />
+            <Table columns={columns} data={students} mobileRender={mobileRender} />
             {pagination.pages > 1 && (
               <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100">
                 <p className="text-sm text-gray-500">{pagination.total} students</p>

@@ -78,12 +78,12 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Settings</h1>
         <p className="text-gray-500 text-sm mt-1">Manage your library preferences</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-gray-100 rounded-xl p-1 w-fit">
+      <div className="flex gap-1 bg-gray-100 rounded-xl p-1 w-full sm:w-fit overflow-x-auto">
         {tabs.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${activeTab === t.key ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}>
@@ -113,7 +113,7 @@ export default function SettingsPage() {
       )}
 
       {activeTab === 'notifications' && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 max-w-2xl">
+        <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100 max-w-2xl">
           <h2 className="font-semibold text-gray-900 mb-4">Notification Settings</h2>
           <div className="space-y-4">
             <Input label="Fee Reminder (days before expiry)" type="number" value={notifForm.feeReminderDays} onChange={e => setNotifForm({ ...notifForm, feeReminderDays: e.target.value })} />
@@ -122,12 +122,12 @@ export default function SettingsPage() {
               { key: 'smsEnabled', label: 'SMS Notifications', desc: 'Send SMS alerts to students' },
               { key: 'autoExpireStudents', label: 'Auto Expire Students', desc: 'Automatically mark students expired on due date' },
             ].map(s => (
-              <div key={s.key} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                <div>
-                  <p className="font-medium text-gray-800">{s.label}</p>
-                  <p className="text-xs text-gray-500">{s.desc}</p>
+              <div key={s.key} className="flex items-center justify-between gap-4 p-3 sm:p-4 bg-gray-50 rounded-xl">
+                <div className="min-w-0">
+                  <p className="font-medium text-gray-800 text-sm">{s.label}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{s.desc}</p>
                 </div>
-                <label className="relative inline-flex items-center cursor-pointer">
+                <label className="relative inline-flex items-center cursor-pointer shrink-0">
                   <input type="checkbox" checked={notifForm[s.key]} onChange={() => setNotifForm(f => ({ ...f, [s.key]: !f[s.key] }))} className="sr-only peer" />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:bg-indigo-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
                 </label>

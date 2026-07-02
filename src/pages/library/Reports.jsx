@@ -55,30 +55,30 @@ export default function ReportsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Reports & Analytics</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Reports & Analytics</h1>
           <p className="text-gray-500 text-sm mt-1">Insights about your library performance</p>
         </div>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {[
           { label: 'This Month Revenue', value: `₹${(summary?.thisMonth?.total || 0).toLocaleString('en-IN')}`, color: 'text-green-600', bg: 'bg-green-50' },
           { label: 'Payments This Month', value: summary?.thisMonth?.count || 0, color: 'text-indigo-600', bg: 'bg-indigo-50' },
           { label: 'Total Revenue', value: `₹${(summary?.allTime?.total || 0).toLocaleString('en-IN')}`, color: 'text-purple-600', bg: 'bg-purple-50' },
           { label: 'Pending Fees', value: pendingFees.length, color: 'text-orange-600', bg: 'bg-orange-50' },
         ].map(c => (
-          <div key={c.label} className={`${c.bg} rounded-2xl p-5`}>
-            <p className="text-xs text-gray-500">{c.label}</p>
-            <p className={`text-2xl font-bold mt-1 ${c.color}`}>{c.value}</p>
+          <div key={c.label} className={`${c.bg} rounded-2xl p-4 sm:p-5`}>
+            <p className="text-xs text-gray-500 leading-tight">{c.label}</p>
+            <p className={`text-xl sm:text-2xl font-bold mt-1 ${c.color} truncate`}>{c.value}</p>
           </div>
         ))}
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-gray-100 rounded-xl p-1 w-fit">
+      <div className="flex gap-1 bg-gray-100 rounded-xl p-1 w-full sm:w-fit overflow-x-auto">
         {tabs.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${activeTab === t.key ? 'bg-white shadow-sm text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`}>
@@ -90,23 +90,23 @@ export default function ReportsPage() {
 
       {/* Revenue Tab */}
       {activeTab === 'revenue' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h2 className="font-semibold text-gray-900 mb-4">Monthly Revenue vs Expenses</h2>
-            <ResponsiveContainer width="100%" height={250}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="lg:col-span-2 bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
+            <h2 className="font-semibold text-gray-900 mb-4 text-sm sm:text-base">Monthly Revenue vs Expenses</h2>
+            <ResponsiveContainer width="100%" height={220}>
               <BarChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                <YAxis tick={{ fontSize: 12 }} tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} />
+                <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 11 }} tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} width={42} />
                 <Tooltip formatter={v => `₹${v.toLocaleString('en-IN')}`} />
                 <Bar dataKey="revenue" fill="#4f46e5" radius={[4, 4, 0, 0]} name="Revenue" />
                 <Bar dataKey="expenses" fill="#ef4444" radius={[4, 4, 0, 0]} name="Expenses" />
-                <Legend />
+                <Legend wrapperStyle={{ fontSize: 12 }} />
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h2 className="font-semibold text-gray-900 mb-4">Payment Modes</h2>
+          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
+            <h2 className="font-semibold text-gray-900 mb-4 text-sm sm:text-base">Payment Modes</h2>
             {paymentModeData.length > 0 ? (
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
@@ -125,13 +125,13 @@ export default function ReportsPage() {
 
       {/* Students Tab */}
       {activeTab === 'students' && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <h2 className="font-semibold text-gray-900 mb-4">Monthly Student Growth</h2>
-          <ResponsiveContainer width="100%" height={280}>
+        <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
+          <h2 className="font-semibold text-gray-900 mb-4 text-sm sm:text-base">Monthly Student Growth</h2>
+          <ResponsiveContainer width="100%" height={240}>
             <LineChart data={monthlyData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} />
+              <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+              <YAxis tick={{ fontSize: 11 }} />
               <Tooltip />
               <Line type="monotone" dataKey="students" stroke="#4f46e5" strokeWidth={2} dot={{ fill: '#4f46e5' }} name="Students" />
             </LineChart>
@@ -142,22 +142,22 @@ export default function ReportsPage() {
       {/* Pending Fees Tab */}
       {activeTab === 'pending' && (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-          <div className="px-6 py-4 border-b border-gray-100">
-            <h2 className="font-semibold text-gray-900">Students with Pending Fees ({pendingFees.length})</h2>
+          <div className="px-4 py-3 border-b border-gray-100">
+            <h2 className="font-semibold text-gray-900 text-sm sm:text-base">Students with Pending Fees ({pendingFees.length})</h2>
           </div>
           {pendingFees.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">All fees collected! 🎉</div>
+            <div className="text-center py-12 text-gray-400 text-sm">All fees collected! 🎉</div>
           ) : (
             <div className="divide-y divide-gray-50">
               {pendingFees.map((s, i) => (
-                <div key={i} className="px-6 py-4 flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-gray-900">{s.name}</p>
-                    <p className="text-xs text-gray-400">{s.mobile} • Seat {s.seatNo || '—'}</p>
+                <div key={i} className="px-4 py-3 flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-medium text-gray-900 truncate">{s.name}</p>
+                    <p className="text-xs text-gray-400 truncate">{s.mobile} • Seat {s.seatNo || '—'}</p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right shrink-0">
                     <p className="font-semibold text-orange-600">₹{s.monthlyFee}/mo</p>
-                    <p className="text-xs text-gray-400">Due: {s.feesDueDate} of month</p>
+                    <p className="text-xs text-gray-400">Due: {s.feesDueDate}</p>
                   </div>
                 </div>
               ))}

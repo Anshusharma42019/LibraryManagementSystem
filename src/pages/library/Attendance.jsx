@@ -498,15 +498,15 @@ export default function AttendancePage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Attendance</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Attendance</h1>
           <p className="text-gray-500 text-sm mt-1">Mark attendance, track check-ins, and book time slots</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-gray-100 rounded-2xl p-1 w-fit">
+      <div className="flex gap-1 bg-gray-100 rounded-2xl p-1 w-full sm:w-fit overflow-x-auto">
         {TABS.map(tab => {
           const Icon = tab.icon;
           return (

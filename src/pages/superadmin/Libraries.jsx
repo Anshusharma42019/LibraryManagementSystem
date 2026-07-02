@@ -107,6 +107,31 @@ export default function LibrariesPage() {
     }
   };
 
+  const libMobileRender = (r) => (
+    <div className="space-y-2">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="font-semibold text-gray-900 truncate">{r.name}</p>
+          <p className="text-xs text-gray-400">{r.ownerName} • {r.mobile}</p>
+        </div>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <Badge text={r.status} type={r.status} />
+          <Badge text={r.planName} type="default" />
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-gray-400">
+          Expires: {r.subscriptionExpiry ? new Date(r.subscriptionExpiry).toLocaleDateString('en-IN') : '—'}
+        </span>
+        <div className="flex items-center gap-1">
+          <button onClick={() => openEdit(r)} className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"><Edit2 size={14} /></button>
+          <button onClick={() => handleStatus(r._id, r.status)} className={`p-1.5 rounded-lg transition ${r.status === 'active' ? 'text-yellow-600 hover:bg-yellow-50' : 'text-green-600 hover:bg-green-50'}`}><Power size={14} /></button>
+          <button onClick={() => handleDelete(r._id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition"><Trash2 size={14} /></button>
+        </div>
+      </div>
+    </div>
+  );
+
   const columns = [
     { key: 'name', label: 'Library Name', render: r => <span className="font-medium text-gray-900">{r.name}</span> },
     { key: 'ownerName', label: 'Owner' },
@@ -133,9 +158,9 @@ export default function LibrariesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Library Management</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Library Management</h1>
           <p className="text-gray-500 text-sm mt-1">Manage all libraries on the platform</p>
         </div>
         <Button icon={Plus} onClick={openAdd}>Add Library</Button>
@@ -171,7 +196,7 @@ export default function LibrariesPage() {
           <EmptyState icon={Building2} title="No libraries found" subtitle="Add your first library to get started" action={<Button icon={Plus} onClick={openAdd}>Add Library</Button>} />
         ) : (
           <>
-            <Table columns={columns} data={libraries} />
+            <Table columns={columns} data={libraries} mobileRender={libMobileRender} />
             {/* Pagination */}
             {pagination.pages > 1 && (
               <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100">

@@ -99,28 +99,28 @@ export default function SeatsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Seat Management</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Seat Management</h1>
           <p className="text-gray-500 text-sm mt-1">Manage and track all library seats</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 shrink-0">
           <Button variant="outline" icon={Layers} onClick={() => setShowBulk(true)}>Bulk Add</Button>
           <Button icon={Plus} onClick={() => { setEditSeat(null); setForm({ seatNo: '', floor: 'Ground', section: 'A', type: 'standard', monthlyRent: '' }); setShowModal(true); }}>Add Seat</Button>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: 'Total Seats', value: stats.total, color: 'text-gray-700', bg: 'bg-gray-50' },
-          { label: 'Available', value: stats.available, color: 'text-green-700', bg: 'bg-green-50' },
-          { label: 'Occupied', value: stats.occupied, color: 'text-red-700', bg: 'bg-red-50' },
-          { label: 'Reserved', value: stats.reserved, color: 'text-yellow-700', bg: 'bg-yellow-50' },
+          { label: 'Total Seats', value: stats.total,     color: 'text-gray-700',   bg: 'bg-gray-50' },
+          { label: 'Available',   value: stats.available, color: 'text-green-700',  bg: 'bg-green-50' },
+          { label: 'Occupied',    value: stats.occupied,  color: 'text-red-700',    bg: 'bg-red-50' },
+          { label: 'Reserved',    value: stats.reserved,  color: 'text-yellow-700', bg: 'bg-yellow-50' },
         ].map(s => (
           <div key={s.label} className={`${s.bg} rounded-2xl p-4`}>
             <p className="text-xs text-gray-500">{s.label}</p>
-            <p className={`text-3xl font-bold ${s.color}`}>{s.value}</p>
+            <p className={`text-2xl font-bold mt-1 ${s.color}`}>{s.value}</p>
           </div>
         ))}
       </div>
@@ -147,49 +147,70 @@ export default function SeatsPage() {
           <EmptyState icon={Armchair} title="No seats added yet" subtitle="Add seats individually or use bulk add" action={<Button icon={Plus} onClick={() => setShowModal(true)}>Add Seat</Button>} />
         </div>
       ) : viewMode === 'grid' ? (
-        <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3">
+        <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2 sm:gap-3">
           {seats.map(seat => (
             <div
               key={seat._id}
               onClick={() => { setEditSeat(seat); setForm({ seatNo: seat.seatNo, floor: seat.floor, section: seat.section, type: seat.type, monthlyRent: seat.monthlyRent }); setShowModal(true); }}
-              className={`border-2 rounded-xl p-3 cursor-pointer hover:shadow-md transition text-center ${statusColor[seat.status]}`}
+              className={`border-2 rounded-xl p-2 sm:p-3 cursor-pointer hover:shadow-md transition text-center ${statusColor[seat.status]}`}
             >
-              <Armchair size={20} className="mx-auto mb-1" />
-              <p className="text-xs font-bold">{seat.seatNo}</p>
-              <p className="text-xs capitalize opacity-70">{seat.status}</p>
+              <Armchair size={16} className="mx-auto mb-1" />
+              <p className="text-xs font-bold leading-tight">{seat.seatNo}</p>
+              <p className="text-xs capitalize opacity-70 hidden sm:block">{seat.status}</p>
             </div>
           ))}
         </div>
       ) : (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-xs text-gray-500 uppercase">
-              <tr>
-                <th className="px-6 py-3 text-left">Seat No</th>
-                <th className="px-6 py-3 text-left">Floor</th>
-                <th className="px-6 py-3 text-left">Section</th>
-                <th className="px-6 py-3 text-left">Type</th>
-                <th className="px-6 py-3 text-left">Rent</th>
-                <th className="px-6 py-3 text-left">Status</th>
-                <th className="px-6 py-3 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {seats.map(seat => (
-                <tr key={seat._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-3 font-medium">{seat.seatNo}</td>
-                  <td className="px-6 py-3 text-gray-500">{seat.floor}</td>
-                  <td className="px-6 py-3 text-gray-500">{seat.section}</td>
-                  <td className="px-6 py-3 capitalize text-gray-500">{seat.type}</td>
-                  <td className="px-6 py-3">₹{seat.monthlyRent}</td>
-                  <td className="px-6 py-3"><Badge text={seat.status} type={seat.status === 'available' ? 'active' : seat.status === 'occupied' ? 'expired' : 'default'} /></td>
-                  <td className="px-6 py-3">
-                    <button onClick={() => handleDelete(seat._id)} className="text-red-400 hover:text-red-600 text-xs">Delete</button>
-                  </td>
+          {/* Desktop list */}
+          <div className="hidden sm:block overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 text-xs text-gray-500 uppercase">
+                <tr>
+                  <th className="px-5 py-3 text-left">Seat No</th>
+                  <th className="px-5 py-3 text-left">Floor</th>
+                  <th className="px-5 py-3 text-left">Section</th>
+                  <th className="px-5 py-3 text-left">Type</th>
+                  <th className="px-5 py-3 text-left">Rent</th>
+                  <th className="px-5 py-3 text-left">Status</th>
+                  <th className="px-5 py-3 text-left">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {seats.map(seat => (
+                  <tr key={seat._id} className="hover:bg-gray-50">
+                    <td className="px-5 py-3 font-medium">{seat.seatNo}</td>
+                    <td className="px-5 py-3 text-gray-500">{seat.floor}</td>
+                    <td className="px-5 py-3 text-gray-500">{seat.section}</td>
+                    <td className="px-5 py-3 capitalize text-gray-500">{seat.type}</td>
+                    <td className="px-5 py-3">₹{seat.monthlyRent}</td>
+                    <td className="px-5 py-3"><Badge text={seat.status} type={seat.status === 'available' ? 'active' : seat.status === 'occupied' ? 'expired' : 'default'} /></td>
+                    <td className="px-5 py-3">
+                      <button onClick={() => handleDelete(seat._id)} className="text-red-400 hover:text-red-600 text-xs">Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {/* Mobile list */}
+          <div className="sm:hidden divide-y divide-gray-50">
+            {seats.map(seat => (
+              <div key={seat._id} className="p-4 flex items-center justify-between gap-3"
+                onClick={() => { setEditSeat(seat); setForm({ seatNo: seat.seatNo, floor: seat.floor, section: seat.section, type: seat.type, monthlyRent: seat.monthlyRent }); setShowModal(true); }}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-xl border-2 flex items-center justify-center ${statusColor[seat.status]}`}>
+                    <Armchair size={16} />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">{seat.seatNo}</p>
+                    <p className="text-xs text-gray-400 capitalize">{seat.floor} • {seat.type} • ₹{seat.monthlyRent}</p>
+                  </div>
+                </div>
+                <Badge text={seat.status} type={seat.status === 'available' ? 'active' : seat.status === 'occupied' ? 'expired' : 'default'} />
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

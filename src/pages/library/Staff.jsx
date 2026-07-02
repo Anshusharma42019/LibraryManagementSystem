@@ -84,6 +84,32 @@ export default function StaffPage() {
     setForm(f => ({ ...f, permissions: { ...f.permissions, [key]: !f.permissions[key] } }));
   };
 
+  const staffMobileRender = (r) => (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-700 font-bold shrink-0">
+            {r.name.charAt(0).toUpperCase()}
+          </div>
+          <div className="min-w-0">
+            <p className="font-semibold text-gray-900 truncate">{r.name}</p>
+            <p className="text-xs text-gray-400 truncate">{r.email} • {r.mobile}</p>
+          </div>
+        </div>
+        <Badge text={r.isActive ? 'Active' : 'Inactive'} type={r.isActive ? 'active' : 'expired'} />
+      </div>
+      <div className="flex flex-wrap gap-1">
+        {PERMISSIONS.filter(p => r.permissions?.[p.key]).map(p => (
+          <span key={p.key} className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">{p.label}</span>
+        ))}
+      </div>
+      <div className="flex justify-end gap-2 pt-1">
+        <button onClick={() => openEdit(r)} className="p-1.5 text-indigo-500 hover:bg-indigo-50 rounded-lg"><Edit2 size={14} /></button>
+        <button onClick={() => handleDelete(r._id)} className="p-1.5 text-red-400 hover:bg-red-50 rounded-lg"><Trash2 size={14} /></button>
+      </div>
+    </div>
+  );
+
   const columns = [
     {
       key: 'name', label: 'Staff Member',
@@ -124,9 +150,9 @@ export default function StaffPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Staff Management</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Staff Management</h1>
           <p className="text-gray-500 text-sm mt-1">Manage staff accounts and permissions</p>
         </div>
         <Button icon={Plus} onClick={() => { setEditStaff(null); setForm(defaultForm); setShowModal(true); }}>Add Staff</Button>
@@ -136,7 +162,7 @@ export default function StaffPage() {
         {loading ? <Spinner /> : staff.length === 0 ? (
           <EmptyState icon={UserCog} title="No staff members" subtitle="Add staff to help manage your library" action={<Button icon={Plus} onClick={() => setShowModal(true)}>Add Staff</Button>} />
         ) : (
-          <Table columns={columns} data={staff} />
+          <Table columns={columns} data={staff} mobileRender={staffMobileRender} />
         )}
       </div>
 
