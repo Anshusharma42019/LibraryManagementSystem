@@ -15,7 +15,7 @@ dist-ssr
 # Environment variables (never commit secrets!)
 .env
 .env.local
-.env.production
+# .env.production — needed for Hostinger Git deployment
 
 # Editor directories and files
 .vscode/*
