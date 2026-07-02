@@ -7,24 +7,16 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
-    minify: 'esbuild',
+    minify: 'oxc',
     chunkSizeWarningLimit: 1000,
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('recharts')) return 'charts';
-          if (id.includes('react-dom') || id.includes('react-router-dom') || id.includes('node_modules/react/')) return 'vendor';
-        },
-      },
-    },
   },
   server: {
     port: 3000,
     proxy: {
       '/api': {
-        target: 'https://xluxlms.trivenayurveda.in',
+        target: 'http://localhost:5000',
         changeOrigin: true,
       },
     },
-  },http://localhost:500
+  },
 })
