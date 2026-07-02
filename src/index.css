@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/* Custom CSS Variables */
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8fafc;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
